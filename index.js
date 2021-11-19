@@ -18,10 +18,12 @@ const apiKey = "FRPJzXKxhsGyEfxr";
 const CharactersRoutes = require("./routes/CharacterRoutes");
 const ComicsRoutes = require("./routes/ComicsRoutes");
 const UserRoutes = require("./routes/UserRoutes");
+const FavoriteRoutes = require("./routes/FavoriteRoutes");
 
 app.use(CharactersRoutes);
 app.use(ComicsRoutes);
 app.use(UserRoutes);
+app.use(FavoriteRoutes);
 
 app.all("*", (req, res) => {
   res.status(400).json({ message: error.message });

@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 
 const User = require("../models/User");
-const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const SHA256 = require("crypto-js/sha256");
 const encBase64 = require("crypto-js/enc-base64");
@@ -12,11 +11,11 @@ router.post("/user/signup", async (req, res) => {
   try {
     if (req.fields.email) {
     } else {
-      return res.json({ Message: "Please enter your email." });
+      return res.json({ Error: "Please enter your email." });
     }
     if (req.fields.password) {
     } else {
-      return res.json({ Message: "Please enter your password." });
+      return res.json({ Error: "Please enter your password." });
     }
 
     try {
@@ -52,16 +51,29 @@ router.post("/user/signup", async (req, res) => {
 
 router.post("/user/login", async (req, res) => {
   try {
+    if (req.fields.email) {
+    } else {
+      return res.json({ Error: "Please enter your email." });
+    }
+    if (req.fields.password) {
+    } else {
+      return res.json({ Error: "Please enter your password." });
+    }
+
     const userEmailSearch = await User.findOne({ email: req.fields.email });
-    const hashUserLogIn = SHA256(
-      req.fields.password + userEmailSearch.salt
-    ).toString(encBase64);
-    if (userEmailSearch.hash === hashUserLogIn) {
-      res.json({
-        _id: userEmailSearch._id,
-        token: userEmailSearch.token,
-        account: userEmailSearch.account,
-      });
+    if (userEmailSearch) {
+      const hashUserLogIn = SHA256(
+        req.fields.password + userEmailSearch.salt
+      ).toString(encBase64);
+      if (userEmailSearch.hash === hashUserLogIn) {
+        res.json({
+          _id: userEmailSearch._id,
+          token: userEmailSearch.token,
+          account: userEmailSearch.account,
+        });
+      } else {
+        res.json({ Error: "Please enter a valid email address and password" });
+      }
     } else {
       res.json({ Error: "Please enter a valid email address and password" });
     }
