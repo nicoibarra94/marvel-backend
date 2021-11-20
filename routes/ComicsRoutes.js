@@ -5,7 +5,7 @@ const router = express.Router();
 const dotenv = require("dotenv").config();
 const axios = require("axios");
 
-const Favorite = require("../models/Favorite");
+const User = require("../models/User");
 
 const apiKey = "FRPJzXKxhsGyEfxr";
 
@@ -46,16 +46,11 @@ router.get("/comics/:id", async (req, res) => {
 
 router.post("/comics/addfavorite", isAuthenticated, async (req, res) => {
   try {
-    const newFavorite = new Favorite({
-      id: req.query.id,
-      name: req.query.name,
-      description: req.query.description,
-      photo: req.query.photo,
-      type: req.query.type,
-      owner: req.user,
-    });
+    console.log(req.query);
+    const newFavorite = await User.findById(req.user._id);
+    newFavorite.favorites.comics.push(req.query);
     await newFavorite.save();
-    res.json(newFavorite);
+    res.status(200).json();
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

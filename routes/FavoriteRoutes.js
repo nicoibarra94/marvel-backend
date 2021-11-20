@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const Favorite = require("../models/Favorite");
+const User = require("../models/User");
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
-router.get("/favorites", isAuthenticated, async (req, res) => {
+router.post("/favorites", isAuthenticated, async (req, res) => {
   try {
-    const favorites = await Favorite.find({ owner: req.user });
-    res.json(favorites);
+    const userConnected = await User.findById(req.user._id);
+    res.json(userConnected.favorites);
   } catch (error) {
     res.status(400).json(error.message);
   }
