@@ -5,7 +5,7 @@ const axios = require("axios");
 
 const User = require("../models/User");
 
-const apiKey = "FRPJzXKxhsGyEfxr";
+const apiKey = process.env.MARVEL_APIKEY;
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
 

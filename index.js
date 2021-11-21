@@ -5,15 +5,11 @@ const axios = require("axios");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 
-mongoose.connect(
-  "mongodb+srv://nnibarra:EFcSsrcdrNGbt3JT@cluster0.pfvsw.mongodb.net/Marvel"
-);
+mongoose.connect(process.env.MONGODB_URI);
 
 const app = express();
 app.use(formidable());
 app.use(cors());
-
-const apiKey = "FRPJzXKxhsGyEfxr";
 
 const CharactersRoutes = require("./routes/CharacterRoutes");
 const ComicsRoutes = require("./routes/ComicsRoutes");
@@ -29,6 +25,6 @@ app.all("*", (req, res) => {
   res.status(400).json({ message: error.message });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("Server has started");
 });

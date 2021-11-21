@@ -1,5 +1,3 @@
-//Try the method search to do the search of the comics. To see if it works better.
-
 const express = require("express");
 const router = express.Router();
 const dotenv = require("dotenv").config();
@@ -7,7 +5,7 @@ const axios = require("axios");
 
 const User = require("../models/User");
 
-const apiKey = "FRPJzXKxhsGyEfxr";
+const apiKey = process.env.MARVEL_APIKEY;
 
 const isAuthenticated = require("../middlewares/isAuthenticated");
 
@@ -63,7 +61,7 @@ router.post("/comics/addfavorite", isAuthenticated, async (req, res) => {
       }
       if (exist === true) {
         res.json({
-          error: "¡ You already have this character in your favorite list !",
+          error: "¡ You already have this comic in your favorite list !",
         });
       } else {
         newFavorite.favorites.comics.push(req.query);
