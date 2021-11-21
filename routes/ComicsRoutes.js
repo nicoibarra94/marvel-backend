@@ -46,11 +46,27 @@ router.get("/comics/:id", async (req, res) => {
 
 router.post("/comics/addfavorite", isAuthenticated, async (req, res) => {
   try {
-    console.log(req.query);
     const newFavorite = await User.findById(req.user._id);
-    newFavorite.favorites.comics.push(req.query);
-    await newFavorite.save();
-    res.status(200).json();
+
+    const favoritesList = newFavorite.favorites.comics;
+
+    if (favoritesList.length === 0) {
+      newFavorite.favorites.comics.push(req.query);
+      await newFavorite.save();
+      return res.status(200).json();
+    } else {
+      for (let i = 0; i < favoritesList.length; i++) {
+        if (favoritesList[i].id.indexOf(req.query.id) !== -1) {
+          return res.json({
+            error: "¡ You already have this comic in your favorite list !",
+          });
+        } else {
+          newFavorite.favorites.comics.push(req.query);
+          await newFavorite.save();
+          return res.status(200).json();
+        }
+      }
+    }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
