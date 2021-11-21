@@ -40,16 +40,20 @@ router.post("/characters/addfavorite", isAuthenticated, async (req, res) => {
       await newFavorite.save();
       return res.status(200).json();
     } else {
+      let exist = false;
       for (let i = 0; i < favoritesList.length; i++) {
         if (favoritesList[i].id.indexOf(req.query.id) !== -1) {
-          return res.json({
-            error: "¡ You already have this character in your favorite list !",
-          });
-        } else {
-          newFavorite.favorites.characters.push(req.query);
-          await newFavorite.save();
-          return res.status(200).json();
+          exist = true;
         }
+      }
+      if (exist === true) {
+        res.json({
+          error: "¡ You already have this character in your favorite list !",
+        });
+      } else {
+        newFavorite.favorites.characters.push(req.query);
+        await newFavorite.save();
+        return res.status(200).json();
       }
     }
   } catch (error) {
